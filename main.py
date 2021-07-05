@@ -85,50 +85,50 @@ print(len(rectangle2))
   - вивести всі дані про перевезення(поїзд)
 '''
 
-'''
-class Plane:
-    def __init__(self, price, time_road, time_register, type_place):
+class Transport:
+    def __init__(self, name, price, time_road, type_in):
+        self.name = name
         self.price = price
         self.time_road = time_road
+        self.type_in = type_in
+
+    def __sub__(self, other):
+        return f'{self.name} is faster on {other.time_road - self.time_road} minutes than {other.name}'
+
+
+class Plane(Transport):
+    def __init__(self, name, price, time_road, type_in, time_register):
+        Transport.__init__(self, name, price, time_road, type_in)
         self.time_register = time_register
-        self.type_place = type_place
 
     def time(self):
-        return f'{self.time_road + self.time_register} хв'
+        return self.time_road + self.time_register
 
     def __sub__(self, other):
         time = self.time_road + self.time_register
-        return f'літак на {other.time_road - time} хвилин швидше за поїзд'
+        return f'{self.name} is faster on {other.time_road - time} minutes than {other.name}'
 
-class Car:
-    def __init__(self, number, time_road, price_gas, km ):
-        self.number = number
-        self.time_road = time_road
-        self.price_gas = price_gas
+
+class Car(Transport):
+    def __init__(self, name, price, time_road, type_in, km):
+        Transport.__init__(self, name, price, time_road, type_in)
         self.km = km
 
-    def price(self):
-        return ((self.km / (self.time_road / 6)) * self.price_gas)/self.number
+    def price_road(self):
+        return (self.km * self.price) / self.type_in
 
-class Train:
-    def __init__(self, price_ticket, time_road, type_place):
-        self.price_ticket = price_ticket
-        self.time_road = time_road
-        self.type_place = type_place
-
+class Train(Transport):
     def information(self):
-        return f'price ticket - {self.price_ticket}, time in road - {self.time_road}, type of place - {self.type_place}'
+        return f'This {self.name} tickets cost - {self.price}$ type - {self.type_in} and time in road - {self.time_road} minutes'
 
-
-plane = Plane(100, 180, 60, 1)
-car = Car(5, 720, 20, 2400)
-train = Train(50, 1080, 'kupe')
-
+plane = Plane('plane', 300, 300, 1, 30)
+car = Car('car', 20, 360, 8, 800)
+train = Train('train', 200, 1080, 'kupe')
 print(plane.time())
-print(car.price())
+print(car.price_road())
 print(train.information())
-print(plane-car)
-'''
+print(plane.__sub__(train))
+print(car.__sub__(train))
 
 '''
 1)Створити пустий list 
@@ -139,6 +139,8 @@ print(plane-car)
 6) має бути метод(метод класу) для виводу __сount
 7) має бути метод який записує в наш ліст текст з нашої змінної __text
 '''
+
+'''
 l = []
 
 class Letter:
@@ -147,11 +149,13 @@ class Letter:
         self.__text = text
         Letter.__count +=1
 
-    def get_text(self):
+    def __get_text(self):
         return self.__text
 
-    def set_text(self, new_text):
+    def __set_text(self, new_text):
         self.__text = new_text
+
+    my_text = property(fget=__get_text, fset=__set_text)
 
     @classmethod
     def get_count(cls):
@@ -165,8 +169,9 @@ letter = Letter('hello')
 letter.write()
 letter1 = Letter('hi everybody')
 letter1.write()
-letter.set_text('hello world')
+letter.my_text = 'hello world'
 letter.write()
-print(letter.get_text())
+print(letter.my_text)
 print(letter1.get_count())
 print(l)
+'''
